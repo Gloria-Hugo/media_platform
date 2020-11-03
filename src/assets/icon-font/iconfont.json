@@ -1,0 +1,44 @@
+{
+  "id": "2058900",
+  "name": "learning",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "8202265",
+      "name": "圆点",
+      "font_class": "yuandian1",
+      "unicode": "e619",
+      "unicode_decimal": 58905
+    },
+    {
+      "icon_id": "7116641",
+      "name": "完成",
+      "font_class": "wancheng",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "13209522",
+      "name": "附 件",
+      "font_class": "fujian",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
+      "icon_id": "2384755",
+      "name": "稿件库",
+      "font_class": "gaojianku",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
+      "icon_id": "5267407",
+      "name": "记录",
+      "font_class": "jilu",
+      "unicode": "e653",
+      "unicode_decimal": 58963
+    }
+  ]
+}

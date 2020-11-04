@@ -60,7 +60,7 @@
             style="color: #F5472C"
             type="text"
             size="small"
-            title="删除需求" slot="reference"  v-if="scope.row.demand_state==6" @click="showDelete(scope.row.demand_name,scope.row.demand_id)">删除</el-button>
+            title="删除需求" slot="reference"  v-if="scope.row.demand_state==7" @click="showDelete(scope.row.demand_name,scope.row.demand_id)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -82,7 +82,7 @@
             title="确定删除该需求吗"
             @onConfirm="deleteDemand(item.demand_id)"
           > -->
-            <div class="delete hover" v-if="item.demand_state==6" @click.stop="showDelete(item.demand_name,item.demand_id)" slot="reference">×</div>
+            <div class="delete hover" v-if="item.demand_state==7" @click.stop="showDelete(item.demand_name,item.demand_id)" slot="reference">×</div>
           <!-- </el-popconfirm> -->
           <h5>{{ item.demand_name }}</h5>
           <p>
@@ -115,6 +115,9 @@
               >待上线</span
             >
             <span class="status" v-else-if="item.demand_state == 6"
+              >已上线</span
+            >
+            <span class="status" v-else-if="item.demand_state == 7"
               >已完成</span
             >
           </div>
@@ -138,7 +141,7 @@
     <el-pagination
       @current-change="handleCurrentChange"
       :current-page="page"
-      :page-size="10"
+      :page-size="pageSize"
       layout="total, prev, pager, next, jumper"
       :total="totalCount"
       v-if="totalCount!==0"
@@ -162,7 +165,8 @@ export default {
         { status: "3", value: "待交稿" },
         { status: "4", value: "待审核" },
         { status: "5", value: "待上线" },
-        { status: "6", value: "已完成" },
+        { status: "6", value: "已上线" },
+        { status: "7", value: "已完成" },
       ],
       dialogVisible: false,
       loading: false,

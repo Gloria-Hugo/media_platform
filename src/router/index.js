@@ -146,11 +146,6 @@ const router = new VueRouter({
       name: "Admin",
       component: Admin,
       children: [
-        // {
-        //   path: "/admin/usermanager",
-        //   name: "UserManager",
-        //   component: UserManager
-        // },
         {
           path: "/admin/demandusermanager",
           name: "DemandUserManager",

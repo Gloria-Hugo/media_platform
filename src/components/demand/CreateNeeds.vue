@@ -136,6 +136,14 @@
 <script>
 // https://www.cnblogs.com/xiahj/p/vue-simple-uploader.html
 // https://github.com/simple-uploader/Uploader/blob/develop/README_zh-CN.md
+
+// https://blog.csdn.net/zrcj0706/article/details/103137617
+// https://blog.csdn.net/youyudexiaowangzi/article/details/102683103
+// https://www.jb51.net/article/136113.htm
+// http://www.vnfan.com/helinbin/d/641bf08b285463bf.html
+// https://gitee.com/hhjNavy/webupload-vue
+
+// https://github.com/shady-xia/Blog/tree/master/vue-webuploader
 import SparkMD5 from "spark-md5";
 export default {
   data() {
@@ -402,7 +410,6 @@ export default {
       loadNext();
       console.log(fileReaderText)
       fileReaderText.onload = function(event) {
-        console.log(event)
          spark.append(event.target.result);
           if (currentChunk < chunks){
             currentChunk++;
@@ -418,20 +425,6 @@ export default {
         this.error(`文件${file.name}读取出错，请检查该文件`)
         file.cancel();
     };
-
-    // fileReaderText.onload = function(event) {
-    //     console.log(event)
-    //      spark.append(event.target.result);
-    //       if (currentChunk < chunks){
-    //         currentChunk++;
-    //         loadNext();
-    //         console.log('校验MD5 '+ ((currentChunk/chunks)*100).toFixed(0)+'%')
-    //       }else{
-    //          let md5 = spark.end();
-    //         this.computeMD5Success(md5, file);
-    //         console.log(`MD5计算完毕：${file.name} \nMD5：${md5} \n分片：${chunks} 大小:${file.size} 用时：${new Date().getTime() - time} ms`);
-    //       }
-    //   }
       function loadNext() {
         // debugger
         let start = currentChunk * chunkSize;
@@ -440,8 +433,10 @@ export default {
       }
     },
     computeMD5Success(md5, file) {
+      console.log(file)
     // 将自定义参数直接加载uploader实例的opts上
      this.options.query.files = file.file;
+     this.options.query.name = file.name
       // this.options.query.chunks = chunks;
       this.options.query.md5 = md5;
     file.uniqueIdentifier = md5;

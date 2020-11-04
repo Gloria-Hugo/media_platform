@@ -70,7 +70,6 @@ export default {
       this.$http
         .get(`/messageMobileAction/getMessageList?user_code=${token}`)
         .then((res) => {
-          console.log(res);
           if (res.data.data) {
             for (var i = 0; i < res.data.data.length; i++) {
               res.data.data[i].created_date = res.data.data[

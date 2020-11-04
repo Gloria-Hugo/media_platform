@@ -1,6 +1,23 @@
 <template>
   <div id="userManagerBox" class="margin-box">
     <div class="queryBox flex-box">
+       <el-form :inline="true"  class="demo-form-inline">
+        <el-form-item label="账号/电话:">
+          <el-input
+            v-model="user_code"
+            placeholder="输入账号/电话查询"
+          ></el-input>
+        </el-form-item>
+        <el-form-item style="border: none; padding-left: 0">
+          <el-button
+            type="primary"
+            id="queryBTN"
+            @click="onSubmit"
+            style="background: #f5482c; border: none"
+            >查询</el-button
+          >
+        </el-form-item>
+      </el-form>
       <div
         class="btns normal"
         @click="
@@ -241,7 +258,8 @@ export default {
       // 需求方新增服务
       service_title: "",
       service_num: "",
-      loading:false
+      loading:false,
+      user_code:'', // 查询时用户输入的内容
     };
   },
   created() {
@@ -254,7 +272,7 @@ export default {
       this.loading = true
       that.$http
         .get(
-          `/userInfoMobileAction/findUserList?plateform_code=4&offset=${page}&limit=${this.pageSize}`
+          `/userInfoMobileAction/findUserList?plateform_code=4&offset=${page}&limit=${this.pageSize}&userCode=${this.user_code}`
         )
         .then((res) => {
           if (res.data.netCode !== 200) {
@@ -420,6 +438,10 @@ export default {
         }
       });
     },
+    // 搜索查询
+    onSubmit() {
+      this.fetchList(this.page)
+    }
   },
 };
 </script>

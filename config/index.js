@@ -11,8 +11,8 @@ module.exports = {
     assetsPublicPath: "/",
     proxyTable: {
       "/api": {
-        target: "http://119.3.229.105:18281/ietlMobile/", //这里蒋超的地址模拟的;应该填写你们真实的后台接口
-        // target: "http://192.168.0.112:8061/ietl.mobile.web", //这里本地的地址模拟的;应该填写你们真实的后台接口
+        // target: "http://119.3.229.105:18281/ietlMobile/", //这里蒋超的地址模拟的;应该填写你们真实的后台接口
+        target: "http://192.168.0.112:8061/ietl.mobile.web", //这里本地的地址模拟的;应该填写你们真实的后台接口
         changOrigin: true, //允许跨域
         ws: true,
         pathRewrite: {

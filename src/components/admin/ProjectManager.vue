@@ -230,7 +230,7 @@ export default {
     // 获取类型
     getTypeList() {
       this.$http.get(`/typeMobileAction/getTypeList`).then((res) => {
-        if (res.data.data.length) {
+        if (res.data.data) {
           this.typeList = res.data.data;
         } else {
           this.typeList = [];

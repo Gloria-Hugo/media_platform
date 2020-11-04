@@ -89,6 +89,13 @@
           <span><i class="iconfont icon-gaojianku"></i>点击下载稿件 </span>
         </a>
       </div>
+      <div class="subtitle" v-if="detailsBox.online_link">上线地址:</div>
+       <div class="links hover" v-if="detailsBox.online_link">
+        <a :href="detailsBox.online_link" download="" target="blank">
+          <span>{{detailsBox.online_link}}</span>
+        </a>
+        <span style="color:grey;font-size:12px">复制链接可在其他窗口打开</span>
+      </div>
     </div>
   </div>
 </template>

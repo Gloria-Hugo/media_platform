@@ -11,6 +11,10 @@
           <div class="number">{{ detailsBox.demand_name }}</div>
           <div class="status">{{ details_demand_state }}</div>
         </div>
+        <div class="reject" v-if="detailsBox.manuscript_state == 4">
+          <span>驳回理由：</span>
+          <p>{{ detailsBox.audit_opinion }}</p>
+        </div>
         <div id="progress-box">
           <el-timeline style="padding-left: 30px; padding-top: 30px">
             <el-timeline-item
@@ -46,12 +50,14 @@
             分派渠道方
           </div>
           <div
+            class="status1 btns hover"
+            v-else-if="detailsBox.demand_state == 6"
+            @click="endDemand"
+          >确认完成</div>
+          <div
             class="btns hover"
-            v-if="
-              detailsBox.manuscript_state == 1 && detailsBox.demand_state == 4
-            "
-            @click="examine"
-          >
+            v-if="detailsBox.manuscript_state == 1 && detailsBox.demand_state == 4"
+            @click="examine">
             立即审核
           </div>
 
@@ -64,11 +70,7 @@
         </div>
       </div>
     </div>
-    <el-dialog
-      title="分派"
-      :visible.sync="dialogFormVisible"
-      width="500px"
-    >
+    <el-dialog title="分派" :visible.sync="dialogFormVisible" width="500px">
       <el-form :model="form">
         <el-form-item label="价格等级" v-if="detailsBox.demand_state == 1">
           <el-radio v-model="form.radio" @change="changeRadio" label=""
@@ -120,10 +122,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="预计报价">
-          <el-input
-            v-model="form.price"
-            placeholder="请输入价格"
-          ></el-input>
+          <el-input v-model="form.price" placeholder="请输入价格"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -198,6 +197,15 @@
           <span><i class="iconfont icon-gaojianku"></i>点击下载稿件 </span>
         </a>
       </div>
+      <div class="subtitle" v-if="detailsBox.online_link">上线地址:</div>
+      <div class="links hover" v-if="detailsBox.online_link">
+        <a :href="detailsBox.online_link" download="" target="blank">
+          <span>{{ detailsBox.online_link }}</span>
+        </a>
+        <span style="color: grey; font-size: 12px"
+          >复制链接可在其他窗口打开</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -208,7 +216,8 @@ const DEMAND_STATE = {
   3: "待交稿",
   4: "待审核",
   5: "待上线",
-  6: "已完成",
+  6: "已上线",
+  7: "已完成",
 };
 export default {
   data() {
@@ -338,12 +347,10 @@ export default {
       }
     },
     changeBox() {
-      this.form.demands = [],
-      this.dispatch(2)
+      (this.form.demands = []), this.dispatch(2);
     },
-    changeRadio(){
-      this.form.demands = [],
-      this.dispatch(1)
+    changeRadio() {
+      (this.form.demands = []), this.dispatch(1);
     },
     // 确认提交
     confirm() {
@@ -388,6 +395,31 @@ export default {
           this.dialogFormVisible = false;
         }
       );
+    },
+    // 确认结束
+    endDemand() {
+      this.$confirm(
+        `"${this.detailsBox.demand_name}"需求已完成上线了吗？`,
+        "提示",
+        {
+          confirmButtonText: "是的",
+          cancelButtonText: "取消",
+          type: "warning",
+        }
+      )
+        .then(() => {
+          this.$http
+            .get(`/demandMobileAction/endDemand?demand_id=${this.id}`)
+            .then((res) => {
+              if (res.data.netCode == 200) {
+                this.$message.success("操作成功！");
+                this.getDemandById()
+              } else {
+                this.$message.error(res.data.subMessage);
+              }
+            });
+        })
+        .catch(() => {});
     },
     // 获取渠道
     getType2() {

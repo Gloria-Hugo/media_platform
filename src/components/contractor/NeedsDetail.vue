@@ -11,6 +11,10 @@
           <div class="number">{{ detailsBox.demand_name }}</div>
           <div class="status">{{ manuscript_demand_state }}</div>
         </div>
+        <div class="reject" v-if="detailsBox.manuscript_state == 4">
+          <span>驳回理由：</span>
+          <p>{{ detailsBox.audit_opinion }}</p>
+        </div>
         <div id="progress-box">
           <el-timeline style="padding-left: 30px; padding-top: 30px">
             <el-timeline-item
@@ -31,7 +35,7 @@
         </div>
         <div class="option-btns">
           <div class="profits">预计收益：￥{{ detailsBox.demand_money }}</div>
-          <!-- <div class="status3 hover">联系管理员</div> -->
+          <div class="status3 hover" @click="problemDialogVisible = true" v-if="detailsBox.is_perfect==1">帮助</div>
           <div
             class="btns hover"
             v-if="detailsBox.demand_state == 2"
@@ -60,6 +64,7 @@
         </div>
       </div>
     </div>
+    <!-- 上传稿件的弹窗 -->
     <el-dialog title="上传稿件" :visible.sync="dialogVisible" width="50%">
       <!-- <span class="tip">注意：请上传一个{{ detailsBox.type_name }}</span> -->
       <el-upload
@@ -85,9 +90,20 @@
 
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="close"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="close">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 帮助的弹窗 -->
+    <el-dialog title="提示"
+               :visible.sync="problemDialogVisible"
+               width="30%">
+       <span>有问题?及时反馈在下方吧！</span>
+       <el-input v-model="annex_explain" placeholder="请输入容" ></el-input>
+      <span slot="footer"
+            class="dialog-footer">
+        <el-button @click="problemDialogVisible = false">取 消</el-button>
+        <el-button type="primary"
+                   @click="helpBtn">确 定</el-button>
       </span>
     </el-dialog>
     <div class="sideBox rightBox">
@@ -157,6 +173,8 @@ export default {
       fileLoding: false,
       Scriptlinks: "",
       annexList: [],
+      problemDialogVisible:false,
+      annex_explain:"", // 稿件问题描述
     };
   },
   computed: {
@@ -252,6 +270,20 @@ export default {
     close() {
       this.dialogVisible = false;
       this.getDemandById();
+    },
+    // 素材缺失的问题
+    helpBtn() {
+      if(this.annex_explain.trim()==""){
+        this.$message.error("请输入问题！")
+        return false
+      }
+      this.$http.get(`/demandMobileAction/isPerfectDemand?demand_id=${this.id}&annex_explain=${this.annex_explain}`).then(res=>{
+        if(res.data.netCode==200){
+          this.$message.success("反馈已提交！")
+        }
+        this.problemDialogVisible = false;
+        this.getDemandById()
+      })
     },
     // 立即接单
     async takeThis() {

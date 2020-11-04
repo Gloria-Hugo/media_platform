@@ -111,7 +111,7 @@
       <el-pagination
       @current-change="handleCurrentChange"
       :current-page="page"
-      :page-size="10"
+      :page-size="pageSize"
       layout="total, prev, pager, next, jumper"
       :total="totalCount"
     >

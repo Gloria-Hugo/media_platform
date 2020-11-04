@@ -11,6 +11,10 @@
           <div class="number">{{ detailsBox.demand_name }}</div>
           <div class="status">{{ details_demand_state }}</div>
         </div>
+        <div class="reject" v-if="detailsBox.is_perfect==0">
+          <span>需求不完善：</span>
+          <p>{{ detailsBox.annex_explain==0 }}</p>
+        </div>
         <div id="progress-box">
           <el-timeline style="padding-left: 30px; padding-top: 30px">
             <el-timeline-item
@@ -34,14 +38,16 @@
           <!-- <div class="contact hover">联系管理员</div> -->
           <div
             class="status2 hover"
-            v-if="detailsBox.demand_state == 1"
+            v-if="detailsBox.demand_state == 1||detailsBox.is_perfect==0"
             @click="uploadDialogVisible = true"
           >
             更新附件
           </div>
           <div
             class="btns hover"
-            v-if="detailsBox.manuscript_state == 2&&detailsBox.demand_state==4"
+            v-if="
+              detailsBox.manuscript_state == 2 && detailsBox.demand_state == 4
+            "
             @click="examine()"
           >
             审核需求
@@ -137,6 +143,21 @@
       </div>
       <div class="subtitle">交稿截止日期:</div>
       <div class="context">{{ detailsBox.end_date }}</div>
+      <div class="subtitle" v-if="Scriptlinks">查看稿件:</div>
+      <div class="links hover" v-if="Scriptlinks">
+        <a :href="fullUrl + Scriptlinks" download>
+          <span><i class="iconfont icon-gaojianku"></i>点击下载稿件 </span>
+        </a>
+      </div>
+      <div class="subtitle" v-if="detailsBox.online_link">上线地址:</div>
+      <div class="links hover" v-if="detailsBox.online_link">
+        <a :href="detailsBox.online_link" download="" target="blank">
+          <span>{{ detailsBox.online_link }}</span>
+        </a>
+        <span style="color: grey; font-size: 12px"
+          >复制链接可在其他窗口打开</span
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -147,7 +168,8 @@ const DEMAND_STATE = {
   3: "待交稿",
   4: "待审核",
   5: "待上线",
-  6: "已完成",
+  6: "已上线",
+  7: "已完成",
 };
 export default {
   data() {
@@ -170,10 +192,11 @@ export default {
       form: {
         demand_annex: "",
         demand_id: "",
-        annex_name:''
+        annex_name: "",
       },
       showFoot: false,
       annexList: [],
+      Scriptlinks: "", // 稿件地址
     };
   },
   computed: {
@@ -186,6 +209,7 @@ export default {
   },
   created() {
     this.id = this.$route.query.id;
+    this.form.demand_id = this.$route.query.id;
     this.getDemandById();
   },
   methods: {
@@ -219,7 +243,6 @@ export default {
             }
 
             that.detailsBox = templist;
-            that.form.demand_id = templist.demand_id;
             var listDemandStream = res.data.standbyParams.listDemandStream;
             for (var i = 0; i < listDemandStream.length; i++) {
               listDemandStream[i].created_date = listDemandStream[
@@ -229,6 +252,10 @@ export default {
             that.progress = listDemandStream;
             that.fullUrl =
               res.data.standbyParams.ipUrl + res.data.standbyParams.resUrl;
+            if (res.data.standbyParams.listManuscript) {
+              that.Scriptlinks =
+                res.data.standbyParams.listManuscript[0].manuscript_url;
+            }
           } else {
             that.detailsBox = [];
           }

@@ -95,7 +95,8 @@
           <div class="launch-status flex-box">
             <span>{{ item.created_date }}</span>
             <span class="status" v-if="item.demand_state == 5">待上线</span>
-            <span class="status" v-else-if="item.demand_state == 6"
+            <span class="status" v-if="item.demand_state == 6">已上线</span>
+            <span class="status" v-else-if="item.demand_state == 7"
               >已完成</span
             >
           </div>
@@ -115,7 +116,7 @@
     <el-pagination
       @current-change="handleCurrentChange"
       :current-page="page"
-      :page-size="10"
+      :page-size="pageSize"
       layout="total, prev, pager, next, jumper"
       :total="totalCount"
       v-if="totalCount!==0"
@@ -132,7 +133,8 @@ export default {
       tabItem: [
         { status: "", value: "全部" },
         { status: "5", value: "待上线" },
-        { status: "6", value: "已完成" },
+        { status: "6", value: "已上线" },
+        { status: "7", value: "已完成" },
       ],
       demand_code: "",
       dialogVisible: false,

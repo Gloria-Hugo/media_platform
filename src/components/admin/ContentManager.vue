@@ -214,7 +214,7 @@
     <el-pagination
       @current-change="handleCurrentChange"
       :current-page="page"
-      :page-size="10"
+      :page-size="pageSize"
       layout="total, prev, pager, next, jumper"
       :total="totalCount"
       v-if="totalCount !== 0"
@@ -275,15 +275,12 @@ export default {
       this.blocksLoading = true;
       let status = sessionStorage.getItem("statusCode");
       let token = sessionStorage.getItem("userName");
-      that.$http
-        .get(
+      that.$http.get(
           `/demandMobileAction/getDemandList?type=${status}&user_code=${token}&demand_state=${this.activeIndex}&offset=${page}&limit=${this.pageSize}`
         )
         .then(
           (res) => {
-            if (res.data.netCode !== 200) {
-              this.$message.error("获取列表失败！");
-            } else {
+            if (res.data.netCode == 200){
               this.totalCount = res.data.standbyParams.count;
               var templist = res.data.data;
               if (templist) {
@@ -353,15 +350,13 @@ export default {
             this.$message.error(res.data.subMessage)
           }
         })
-        console.log("132145")
       }).catch(()=>{
-        console.log("meiyou")
       });
     },
     // 分派承接方
     dispatch(num, item) {
       const that = this;
-
+      console.log(item)
       const code = sessionStorage.getItem("userName");
       that.form.price = "";
       that.demand_state = item.demand_state;
